@@ -112,7 +112,7 @@ public final class Main {
 		int[] goal = {1,2,3,4,5,6,7,8,0};
 		
 		int f = calculateFh(state,goal);
-
+		System.out.println(f);
 		
 		
 		
@@ -135,6 +135,7 @@ public final class Main {
 	{
 		
 			int h1=0,h2=0;
+			int rowgoal=0,rowstate=0,colgoal=0,colstate=0;
 			// calculate h1, which is the number of tiles out of place
 			for(int m=0; m< state.length; m++)
 			{
@@ -145,7 +146,17 @@ public final class Main {
 			// calculate h2 , which is the manhaten distance between the tile and the goal state of it
 			for(int k=0; k< state.length; k++)
 			{
-				h2+= Math.abs(state[k] - goal[k]); 
+				if( state[k] ==0 )
+					rowgoal = (k<PUZZLE_WIDTH)? 0 : k/PUZZLE_WIDTH;
+				else rowgoal = (goal[state[k]-1]<PUZZLE_WIDTH)? 0 : goal[state[k]-1]/PUZZLE_WIDTH;
+				//System.out.println(rowgoal);
+				rowstate = (k<PUZZLE_WIDTH)? 0 : k/PUZZLE_WIDTH;
+				//System.out.println(rowstate);
+				colgoal = Math.abs(k - rowgoal*PUZZLE_WIDTH);
+				//System.out.println(colgoal);
+				colstate= Math.abs(k - rowstate*PUZZLE_WIDTH);
+				//System.out.println(colstate);
+				h2+=( Math.abs(rowgoal - rowstate) + Math.abs(colgoal - colstate) );
 				
 			}
 		return (h1 +h2); //  return the function for the search..
