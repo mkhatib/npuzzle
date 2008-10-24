@@ -50,10 +50,12 @@ public final class Main {
 		for(int i=0; i< MAX_TILES_NUM; i++)
 			numbers[i] = false;
 			
-		for(int i=0; i< initialState.length; i++)
+
+		try
 		{
-			try
+			for(int i=0; i< initialState.length; i++)
 			{
+
 				int tile = Integer.parseInt(initialState[i]);
 				if(tile > 8 || tile < 0)
 				{
@@ -68,12 +70,30 @@ public final class Main {
 				else 
 					numbers[tile] = true;
 			}
-			catch(Exception ex)
+		}
+		catch(Exception ex)
+		{
+			System.out.println("ERROR:: Wrong State Format!");
+			return;
+		}
+		
+		
+		// Everything is OK
+		// Now we want to check if the initialState is solvable?
+		for(int i=0; i< MAX_TILES_NUM; i++)
+			numbers[i] = false;
+		int inversions = 0;
+		for(int i=0; i< initialState.length; i++)
+		{
+			int tile = Integer.parseInt(initialState[i]);
+			numbers[tile] = true;
+			for(int t=tile; t>0;t--)
 			{
-				System.out.println("ERROR:: Wrong State Format!");
+				if(!numbers[t]) inversions++;
 			}
 		}
 		
+		System.out.println("Inversions: " + inversions);
 		
 		
 		/*
