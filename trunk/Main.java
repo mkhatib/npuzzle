@@ -21,6 +21,7 @@ public final class Main {
 	
 	// main method
 	private static int MAX_TILES_NUM = 9;
+	private static int PUZZLE_WIDTH = 3;
 	public static void main(String[] args)
 	{
 		//System.out.println("Hello Noura :-)");
@@ -92,8 +93,22 @@ public final class Main {
 				if(!numbers[t]) inversions++;
 			}
 		}
-		
+
+
 		System.out.println("Inversions: " + inversions);
+		
+		if((PUZZLE_WIDTH % 2 != 0) && (inversions % 2 == 0))
+			System.out.println("Solvable!");
+		else
+		{
+			System.out.println("NOT Solvable!");
+			return;
+		}	
+			
+			
+		
+		
+		
 		
 		
 		/*
