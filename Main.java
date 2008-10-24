@@ -31,16 +31,14 @@ public final class Main {
 		
 		// we need to check that the total number of tiles is entered, => 9 tiles , 
 		String initialStateString = JOptionPane.showInputDialog(null,"Please Enter Initial State:","Initial State",JOptionPane.INFORMATION_MESSAGE);
-		System.out.println("Initial State is: " + initialStateString);
+		System.out.println("Initial State is: " + initialStateStringsString);
 		
 		// Removing Extra Spaces from the beginning and ending of the String
-		initialStateString = initialStateString.trim();
-		
 		// Spliting the String by spaces and putting them into array
-		String[] initialState = initialStateString.split("\\s+");
-		
+		String[] initialStateStrings = initialStateString.trim().split("\\s+");
+		int[] initialState = new int[initialStateStrings.length];
 		// If it's less or more than 9 tiles an error message will appear
-		if(initialState.length != MAX_TILES_NUM) {
+		if(initialStateStrings.length != MAX_TILES_NUM) {
 			System.out.println("Error:: Please Enter 9 tile!");
 			return;
 		}
@@ -55,10 +53,10 @@ public final class Main {
 
 		try
 		{
-			for(int i=0; i< initialState.length; i++)
+			for(int i=0; i< initialStateStrings.length; i++)
 			{
 
-				int tile = Integer.parseInt(initialState[i]);
+				int tile = Integer.parseInt(initialStateStrings[i]);
 				if(tile > 8 || tile < 0)
 				{
 					System.out.println("ERROR:: Wrong State Format!");
@@ -70,7 +68,10 @@ public final class Main {
 					return;
 				}
 				else 
+				{
+					initialState[i] = tile;
 					numbers[tile] = true;
+				}	
 			}
 		}
 		catch(Exception ex)
@@ -87,14 +88,12 @@ public final class Main {
 		int inversions = 0;
 		for(int i=0; i< initialState.length; i++)
 		{
-			int tile = Integer.parseInt(initialState[i]);
-			numbers[tile] = true;
+			numbers[initialState[i]] = true;
 			for(int t=tile; t>0;t--)
 			{
 				if(!numbers[t]) inversions++;
 			}
 		}
-
 
 		System.out.println("Inversions: " + inversions);
 		
@@ -109,8 +108,8 @@ public final class Main {
 			
 		
 		// to calculate h1:
-		String[] state = initialState; // do this need to be copied? or this is ok?
-		String[] goal = {"1","2","3","4","5","6","7","8","0"};
+		int[] state = initialState; // do this need to be copied? or this is ok?
+		int[] goal = {1,2,3,4,5,6,7,8,0};
 		
 		int f = calculateFh(state,goal);
 
@@ -133,7 +132,7 @@ public final class Main {
 		
 	}
 	private static int calculateFh(String[] state,String[] goal)
-		{
+	{
 		
 			int h1=0,h2=0;
 			// calculate h1, which is the number of tiles out of place
@@ -151,5 +150,5 @@ public final class Main {
 			}
 		return (h1 +h2); //  return the function for the search..
 		
-		}
+	}
 }
