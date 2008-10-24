@@ -65,6 +65,8 @@ public final class Main {
 					System.out.println("ERROR:: Tile Repeated Twice!");
 					return;
 				}
+				else 
+					numbers[tile] = true;
 			}
 			catch(Exception ex)
 			{
