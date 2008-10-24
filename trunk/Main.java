@@ -31,7 +31,7 @@ public final class Main {
 		
 		// we need to check that the total number of tiles is entered, => 9 tiles , 
 		String initialStateString = JOptionPane.showInputDialog(null,"Please Enter Initial State:","Initial State",JOptionPane.INFORMATION_MESSAGE);
-		System.out.println("Initial State is: " + initialStateStringsString);
+		System.out.println("Initial State is: " + initialStateString);
 		
 		// Removing Extra Spaces from the beginning and ending of the String
 		// Spliting the String by spaces and putting them into array
@@ -89,7 +89,7 @@ public final class Main {
 		for(int i=0; i< initialState.length; i++)
 		{
 			numbers[initialState[i]] = true;
-			for(int t=tile; t>0;t--)
+			for(int t=initialState[i]; t>0;t--)
 			{
 				if(!numbers[t]) inversions++;
 			}
@@ -131,7 +131,7 @@ public final class Main {
 		
 		
 	}
-	private static int calculateFh(String[] state,String[] goal)
+	private static int calculateFh(int[] state,int[] goal)
 	{
 		
 			int h1=0,h2=0;
