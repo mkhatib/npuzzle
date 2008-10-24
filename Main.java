@@ -107,7 +107,12 @@ public final class Main {
 			
 			
 		
+		// to calculate h1:
+		String[] state = initialState; // do this need to be copied? or this is ok?
+		String[] goal = {1,2,3,4,5,6,7,8,0};
 		
+		calculateFh(state,goal);
+
 		
 		
 		
@@ -126,4 +131,23 @@ public final class Main {
 		
 		
 	}
+	int calculateFh(String[] state,String[] goal)
+		{
+		
+			int h1=0,h2=0;
+		
+			for(int m=0; m< State.length; m++)
+			{
+				if(state[m] != goal[m] ) 
+				h1++;
+			}
+		
+			for(int m=0; m< State.length; m++)
+			{
+				h2+= abs(state[m] - goal[m]); 
+				
+			}
+		return (h1 +h2);
+		
+		}
 }
