@@ -1,5 +1,6 @@
 import javax.swing.*;
 import java.awt.*;
+import java.lang.Math;
 
 /**
  * The Main Class
@@ -109,7 +110,7 @@ public final class Main {
 		
 		// to calculate h1:
 		String[] state = initialState; // do this need to be copied? or this is ok?
-		String[] goal = {1,2,3,4,5,6,7,8,0};
+		String[] goal = {"1","2","3","4","5","6","7","8","0"};
 		
 		int f = calculateFh(state,goal);
 
@@ -131,23 +132,24 @@ public final class Main {
 		
 		
 	}
-	int calculateFh(String[] state,String[] goal)
+	private static int calculateFh(String[] state,String[] goal)
 		{
 		
 			int h1=0,h2=0;
-		
-			for(int m=0; m< State.length; m++)
+			// calculate h1, which is the number of tiles out of place
+			for(int m=0; m< state.length; m++)
 			{
 				if(state[m] != goal[m] ) 
 				h1++;
 			}
 		
-			for(int m=0; m< State.length; m++)
+			// calculate h2 , which is the manhaten distance between the tile and the goal state of it
+			for(int k=0; k< state.length; k++)
 			{
-				h2+= abs(state[m] - goal[m]); 
+				h2+= Math.abs(state[k] - goal[k]); 
 				
 			}
-		return (h1 +h2);
+		return (h1 +h2); //  return the function for the search..
 		
 		}
 }
