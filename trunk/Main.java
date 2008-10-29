@@ -147,15 +147,15 @@ public final class Main {
 			for(int k=0; k< state.length; k++)
 			{
 				if( state[k] ==0 )
-					rowgoal = (k<PUZZLE_WIDTH)? 0 : k/PUZZLE_WIDTH;
-				else rowgoal = (goal[state[k]-1]<PUZZLE_WIDTH)? 0 : goal[state[k]-1]/PUZZLE_WIDTH;
-				//System.out.println(rowgoal);
+					rowgoal = PUZZLE_WIDTH-1;
+				else rowgoal = (goal[state[k]-1]<PUZZLE_WIDTH)? 0 : goal[state[k]-1]/PUZZLE_WIDTH; // we can omet the goal and -1
+				
 				rowstate = (k<PUZZLE_WIDTH)? 0 : k/PUZZLE_WIDTH;
-				//System.out.println(rowstate);
-				colgoal = Math.abs(k - rowgoal*PUZZLE_WIDTH);
-				//System.out.println(colgoal);
-				colstate= Math.abs(k - rowstate*PUZZLE_WIDTH);
-				//System.out.println(colstate);
+			
+				colgoal = (state[k]==0)? PUZZLE_WIDTH-1 :(state[k]-1 )%PUZZLE_WIDTH;//Math.abs(k - rowgoal*PUZZLE_WIDTH);
+				
+				colstate= k%PUZZLE_WIDTH;
+			
 				h2+=( Math.abs(rowgoal - rowstate) + Math.abs(colgoal - colstate) );
 				
 			}
