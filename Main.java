@@ -1,6 +1,7 @@
 import javax.swing.*;
 import java.awt.*;
 import java.lang.Math;
+import java.util.Arrays;
 
 /**
  * The Main Class
@@ -112,8 +113,20 @@ public final class Main {
 		int[] goal = {1,2,3,4,5,6,7,8,0};
 		
 		int f = calculateFh(state,goal);
+		
 		System.out.println(f);
 		
+		
+		State ss1 = new State(new int[] {1,2,3});
+		State ss2 = new State(new int[] {1,2,3});
+		
+		System.out.println(ss1.equals(ss2));
+		
+		/* Arrays.equals could be used to know whether two states are equal or not
+		int[] s1 = {1,2,3};
+		int[] s2 = {1,2,3};
+		System.out.println(Arrays.equals(s1,s2));
+		*/
 		
 		
 		/*
