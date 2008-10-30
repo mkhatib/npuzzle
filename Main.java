@@ -148,9 +148,9 @@ public final class Main {
 			{
 				if( state[k] ==0 )
 					rowgoal = PUZZLE_WIDTH-1;
-				else rowgoal = (goal[state[k]-1]<PUZZLE_WIDTH)? 0 : goal[state[k]-1]/PUZZLE_WIDTH; // we can omet the goal and -1
+				else rowgoal = /*(goal[state[k]-1]<PUZZLE_WIDTH)? 0 : */ (state[k]-1)/PUZZLE_WIDTH; // we can omet the goal and -1
 				
-				rowstate = (k<PUZZLE_WIDTH)? 0 : k/PUZZLE_WIDTH;
+				rowstate = /*(k<PUZZLE_WIDTH)? 0 : */ k/PUZZLE_WIDTH;
 			
 				colgoal = (state[k]==0)? PUZZLE_WIDTH-1 :(state[k]-1 )%PUZZLE_WIDTH;//Math.abs(k - rowgoal*PUZZLE_WIDTH);
 				
@@ -159,6 +159,7 @@ public final class Main {
 				h2+=( Math.abs(rowgoal - rowstate) + Math.abs(colgoal - colstate) );
 				
 			}
+	
 		return (h1 +h2); //  return the function for the search..
 		
 	}
