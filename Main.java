@@ -24,6 +24,7 @@ public final class Main {
 	// main method
 	private static int MAX_TILES_NUM = 9;
 	private static int PUZZLE_WIDTH = 3;
+	private State initialState, goalState;
 	public static void main(String[] args)
 	{
 		//System.out.println("Hello Noura :-)");
@@ -112,6 +113,16 @@ public final class Main {
 		int[] state = initialState; // do this need to be copied? or this is ok?
 		int[] goal = {1,2,3,4,5,6,7,8,0};
 		
+		
+		
+		
+		
+		Puzzle puzzle = new Puzzle(initalState,goal);
+		// puzzle.solve()
+		
+		
+		
+		
 		int f = calculateFh(state,goal);
 		
 		System.out.println(f);
@@ -174,6 +185,5 @@ public final class Main {
 			}
 	
 		return (h1 +h2); //  return the function for the search..
-		
 	}
 }
