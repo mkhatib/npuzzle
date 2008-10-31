@@ -1,5 +1,5 @@
 import java.util.Arrays;
-class State 
+class State implements Clonable
 {
 	// private ArrayList children;
 
@@ -20,6 +20,9 @@ class State
 	{
 		return (Arrays.equals(this.getState(),((State)o).getState()));
 	}
+	
+
+	
 	
 	
 	// Getters
