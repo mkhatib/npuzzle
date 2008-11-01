@@ -117,7 +117,7 @@ public final class Main {
 		
 		
 		
-		Puzzle puzzle = new Puzzle(initalState,goal);
+		Puzzle puzzle = new Puzzle(new State(initialState),new State(goal));
 		// puzzle.solve()
 		
 		

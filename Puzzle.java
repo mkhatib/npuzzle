@@ -10,12 +10,16 @@ class Puzzle
 	static private ArrayList open = new ArrayList();
 	static private ArrayList closed = new ArrayList();
 	private State goal;
+	private State initialState;
 	private final int PUZZLE_WIDTH;
+	
+	
 	public Puzzle(State initialState, State goalState)
 	{
 		open.add(initialState);
+		this.initialState = initialState;
 		this.goal = goalState;
-		this.PUZZLE_WIDTH = (int)Math.sqrt(initialState.length);
+		this.PUZZLE_WIDTH = (int)Math.sqrt(initialState.getState().length);
 	}
 	
 	/**
@@ -46,28 +50,28 @@ class Puzzle
 		State closedState = (State)closed.get(closed.indexOf(minState));
 		if(closedState == null)
 		{
-			State stateToReturn = (State)minState.clone();
-			open.remove(minIndex);
+			State stateToReturn = minState.copyState();
+			open.remove(minStateIndex);
 			return  stateToReturn;
 		}
 		else if(minState.getCost() < closedState.getCost())	
 		{
 			// If it exists and the open one is less cost than the closed one
 			// Replace the closed one and move the open one to the closed
-			State stateToReturn = (State)minState.clone();
+			State stateToReturn = minState.copyState();
 			closed.remove(closed.indexOf(closedState));
 			closed.add(stateToReturn);
-			open.remove(minIndex);
+			open.remove(minStateIndex);
 			return  stateToReturn;
 		}
 		else
 		{
 			// If it's already in the closed state, and it's cost is larger then
 			// Remove it and try to get the new least cost 
-			open.remove(minIndex);
+			open.remove(minStateIndex);
 			return getLeastCost();
 		}	
-		return null;
+		//return null;
 		// 3. If not, or its cost is less than the closed one then exapnd it.
 		// 4. Add the expanded states to the open list
 		// 5. Add the current node to the closed list
@@ -79,7 +83,7 @@ class Puzzle
 	 * @param  State, State
 	 * @return int 
 	 */
-	private static int calculateFh(State s,State g)
+	public int calculateFh(State s,State g)
 	{
 		int h1=0,h2=0;
 		int rowgoal=0,rowstate=0,colgoal=0,colstate=0;
@@ -106,5 +110,10 @@ class Puzzle
 		return (h1 +h2); //  return the function for the search..
 	}
 	
-	
+	public boolean isSolvable()
+	{
+		if((PUZZLE_WIDTH % 2 != 0) && (initialState.calculateInversions() % 2 == 0))
+			return true;
+		return false;
+	}
 }
