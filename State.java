@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.Arrays;
 class State implements Cloneable
 {
@@ -7,12 +8,13 @@ class State implements Cloneable
 	private int id;
 	private int[] state;
 	private State parent;
-	
+	private int PUZZLE_WIDTH;
 	private int cost;
 	
 	public State(int[] state){
 		this.state = state;
 		this.id = LAST_ID++;
+		PUZZLE_WIDTH = (int)Math.sqrt(state.length);
 	}
 	
 	
@@ -59,54 +61,73 @@ class State implements Cloneable
 		return null;
 	}
 	
+
 	
 	
 	public ArrayList expand()
 	{
-		
+		ArrayList expandList = new ArrayList();
+		int emptyPostion = Utility.whereIn(state,0);
+		State newState = canMoveUp();
+		if(newState != null)
+			expandList.add(newState);
+		newState = canMoveDown();
+		if(newState != null)
+			expandList.add(newState);
+		newState = canMoveRight();
+		if(newState != null)
+			expandList.add(newState);
+		newState = canMoveLeft();
+		if(newState != null)
+			expandList.add(newState);
+		return expandList;
 	}
-	public boolean canMoveUp()
-       {
-               int emptyPosition = Utility.whereIn(state,0);
-               // If it's in the first line which mean its position is 0,1, or 2
-               if(emptyPosition < PUZZLE_WIDTH){
-                       return false
-               }
-               return true;
-       }
-	
-	public boolean canMoveDown()
-       {
-               int emptyPosition = Utility.whereIn(state,0);
-               // If it's in the first line which mean its position is 0,1, or 2
-               if(emptyPosition/PUZZLE_WIDTH == PUZZLE_WIDTH -1){
-                       return false
-               }
-               //return true;
-			   String _state = Utility.swap(emptyPosition,emptyPosition-PUZZLE_WIDTH , state.clone())
-               State newState = new State(_state);
-               expandList.add(newState);
-       }
-	   public boolean canMoveRight()
-       {
-               int emptyPosition = Utility.whereIn(state,0);
-			
-               // If it's in the first line which mean its position is 0,1, or 2
-               if( emptyPosition % PUZZLE_WIDTH == PUZZLE_WIDTH -1 ){
-                       return false
-               }
-               return true;
-       }
-	   public boolean canMoveLeft()
-       {
-               int emptyPosition = Utility.whereIn(state,0);
-               // If it's in the first line which mean its position is 0,1, or 2
-               if(emptyPosition % PUZZLE_WIDTH == 0){
-                       return false
-               }
-               return true;
-       }
 	
 	
 	
+	public State canMoveUp()
+	{
+		int emptyPosition = Utility.whereIn(state,0);
+		// If it's in the first line which mean its position is 0,1, or 2
+		if(emptyPosition < PUZZLE_WIDTH){
+			return null;
+		}
+		int[] _state = Utility.swap(emptyPosition,emptyPosition-PUZZLE_WIDTH , state.clone());
+		State newState = new State(_state);
+		return newState;
+	}
+	
+	public State canMoveDown()
+	{
+		int emptyPosition = Utility.whereIn(state,0);
+		// If it's in the last line which mean its position is 0,1, or 2
+		if(emptyPosition/PUZZLE_WIDTH == PUZZLE_WIDTH-1){
+			return null;
+		}
+		int[] _state = Utility.swap(emptyPosition,emptyPosition+PUZZLE_WIDTH , state.clone());
+		State newState = new State(_state);
+		return newState;
+	}
+	public State canMoveRight()
+	{
+		int emptyPosition = Utility.whereIn(state,0);
+		// If it's in the first line which mean its position is 0,1, or 2
+		if( emptyPosition % PUZZLE_WIDTH == PUZZLE_WIDTH -1 ){
+			return null;
+		}
+		int[] _state = Utility.swap(emptyPosition,emptyPosition+1 , state.clone());
+		State newState = new State(_state);
+		return newState;
+	}
+	public State canMoveLeft()
+	{
+		int emptyPosition = Utility.whereIn(state,0);
+		// If it's in the first line which mean its position is 0,1, or 2
+		if(emptyPosition % PUZZLE_WIDTH == 0){
+			return null;
+		}
+		int[] _state = Utility.swap(emptyPosition,emptyPosition-1 , state.clone());
+		State newState = new State(_state);
+		return newState;
+	}
 }   
