@@ -8,4 +8,12 @@ class Utility
 		
 		return -1;
 	}
+	
+	public static int[] swap(int empty,int new_empty, int[] state) {
+		int tmp;
+		tmp = state[empty];
+		state[empty] = state[new_empty];
+		state[new_empty] = tmp;
+		return state;
+	}
 }

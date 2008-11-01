@@ -32,7 +32,7 @@ class Puzzle
 	 *
 	 * @return State
 	 */
-	public State getLeastCost ()
+	public State getLeastCost()
 	{
 		// 1. Bring the Least Open cost
 		State minState, tmpState;
@@ -123,7 +123,7 @@ class Puzzle
 	
 	public void solve()
 	{
-		State ls = getLeastState();
+		State ls = getLeastCost();
 		ArrayList expandedStates = ls.expand();
 		open.addAll(expandedStates);
 		
