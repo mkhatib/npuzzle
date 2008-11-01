@@ -51,6 +51,7 @@ class Puzzle
 		if(closedState == null)
 		{
 			State stateToReturn = minState.copyState();
+			closed.add(minState);
 			open.remove(minStateIndex);
 			return  stateToReturn;
 		}
@@ -115,5 +116,15 @@ class Puzzle
 		if((PUZZLE_WIDTH % 2 != 0) && (initialState.calculateInversions() % 2 == 0))
 			return true;
 		return false;
+	}
+	
+	
+	
+	public void solve()
+	{
+		State ls = getLeastState();
+		ArrayList expandedStates = ls.expand();
+		open.addAll(expandedStates);
+		
 	}
 }

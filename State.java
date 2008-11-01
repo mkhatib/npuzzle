@@ -58,4 +58,19 @@ class State implements Cloneable
 		}
 		return null;
 	}
+	
+	
+	
+	public ArrayList expand()
+	{
+		
+	}
+	
+	
+	
+	
+	public boolean canMoveUp()
+	{
+		
+	}
 }   
