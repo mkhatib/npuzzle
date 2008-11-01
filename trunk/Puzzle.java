@@ -53,6 +53,7 @@ class Puzzle
 			State stateToReturn = minState.copyState();
 			closed.add(minState);
 			open.remove(minStateIndex);
+			closed.add(minState);
 			return  stateToReturn;
 		}
 		else if(minState.getCost() < closedState.getCost())	
