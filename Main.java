@@ -27,6 +27,7 @@ public final class Main {
 	private State initialState, goalState;
 	public static void main(String[] args)
 	{
+		/*
 		//System.out.println("Hello Noura :-)");
 		//System.out.println("Hello Mohammad :-)");
 		//System.out.println("Enter the intial state:");
@@ -115,23 +116,26 @@ public final class Main {
 		
 		
 		
-		
-		
-		Puzzle puzzle = new Puzzle(new State(initialState,null),new State(goal,null)	);
+		*/
+		int[] initialState = {1,2,3,4,5,6,7,0,8};
+		int[] goal = {1,2,3,4,5,6,7,8,0};
+				
+		Puzzle puzzle = new Puzzle(new State(initialState),new State(goal));
+		puzzle.solve();
 		// puzzle.solve()
 		
 		
+	
+		//int f = calculateFh(state,goal);
 		
-		
-		int f = calculateFh(state,goal);
-		
-		System.out.println(f);
-		
+		//System.out.println(f);
+		/*
 		
 		State ss1 = new State(new int[] {1,2,3},null);
 		State ss2 = new State(new int[] {1,2,3},null);
 		
 		System.out.println(ss1.equals(ss2));
+		*/ 
 		
 		/* Arrays.equals could be used to know whether two states are equal or not
 		int[] s1 = {1,2,3};

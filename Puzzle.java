@@ -15,6 +15,7 @@ class Puzzle
 	public static final int TILES_OUT_OF_PLACE=0, MANHATEN_DISTANCE=1;
 	private static int costFunction=TILES_OUT_OF_PLACE;
 	
+	
 	public Puzzle(State initialState, State goalState)
 	{
 		open.add(initialState);
@@ -23,6 +24,7 @@ class Puzzle
 		this.PUZZLE_WIDTH = (int)Math.sqrt(initialState.getState().length);
 	}
 	
+
 	
 	public static State getGoal()
 	{
@@ -46,6 +48,7 @@ class Puzzle
 	public State getLeastCost()
 	{
 		// 1. Bring the Least Open cost
+		
 		State minState, tmpState;
 		minState = ((State)open.get(0));
 		int minStateIndex = 0;
@@ -56,15 +59,18 @@ class Puzzle
 				tmpState = minState;
 				minStateIndex = i;
 			}
+			
 		}
 		// 2. Check if the Least cost is in Closed 
-		State closedState = (State)closed.get(closed.indexOf(minState));
+		int inClosed = closed.indexOf(minState);
+		State closedState=null;
+		if (inClosed != -1) 
+			closedState = (State)closed.get(inClosed);
 		if(closedState == null)
 		{
 			State stateToReturn = minState.copyState();
 			closed.add(minState);
 			open.remove(minStateIndex);
-			closed.add(minState);
 			return  stateToReturn;
 		}
 		else if(minState.getCost() < closedState.getCost())	
@@ -110,15 +116,20 @@ class Puzzle
 	public void solve()
 	{
 		// compare this state with the goal state,, 
+		System.out.println("a");	
 		State ls = getLeastCost();
-		while( !(ls.equals(goal)) )// not end of the game
+		System.out.println("b");	
+		while(!(ls.equals(goal)) )// not end of the game
 		{
+			System.out.println("c");	
 			ArrayList expandedStates = ls.expand();
 			closed.add(ls);
 			open.addAll(expandedStates);
+			System.out.println("d");	
 			ls = getLeastCost();
+			System.out.println("e");	
 		}
-		
+		System.out.println("fffff");	
 		// when goal is founded :) we need to determine the path .. the total path of nodes expanded is in the close
 		// however we need only the right path... traversal from the goal through parents to root :)
 	
@@ -126,7 +137,7 @@ class Puzzle
 		{
 			ls = ls.getParent();
 			// put this on a file or something..
-			
+			System.out.println(ls);
 		}
 		
 	}
