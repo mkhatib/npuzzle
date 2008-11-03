@@ -8,6 +8,7 @@ class State implements Cloneable
 	private int id;
 	private int[] state;
 	private State parent;
+	private char move;
 	private int PUZZLE_WIDTH;
 	private int cost;
 	
@@ -35,9 +36,15 @@ class State implements Cloneable
 		//PUZZLE_WIDTH = (int)Math.sqrt(state.length);
 	}
 	
+	public State(int[] state, State parent, char move){
+		this(state,parent);
+		this.move = move;
+	}
 	
-	public boolean equals(Object o)
-	{
+	public char getMove(){
+		return move;
+	}
+	public boolean equals(Object o){
 		return (Arrays.equals(this.getState(),((State)o).getState()));
 	}
 	
@@ -158,7 +165,7 @@ class State implements Cloneable
 		else
 			_state = Utility.swap(emptyPosition,emptyPosition-PUZZLE_WIDTH , state.clone());
 
-		State newState = new State(_state,this);
+		State newState = new State(_state,this,'U');
 		return newState;
 	}
 	
@@ -175,7 +182,7 @@ class State implements Cloneable
 		else
 				_state = Utility.swap(emptyPosition,emptyPosition+PUZZLE_WIDTH , state.clone());
 
-		State newState = new State(_state,this);
+		State newState = new State(_state,this, 'D');
 		return newState;
 	}
 	
@@ -192,7 +199,7 @@ class State implements Cloneable
 		else
  			_state = Utility.swap(emptyPosition,emptyPosition+1 , state.clone());
 			
-		State newState = new State(_state,this);
+		State newState = new State(_state,this, 'R');
 		return newState;
 	}
 	public State canMoveLeft()
@@ -207,12 +214,12 @@ class State implements Cloneable
 				_state = Utility.swap(emptyPosition,(emptyPosition + (PUZZLE_WIDTH -1) ), state.clone());
 		else
 			_state = Utility.swap(emptyPosition,emptyPosition-1 , state.clone());
-		State newState = new State(_state,this);
+		State newState = new State(_state,this, 'L');
 		return newState;
 	}
 		
 	public String toString(){
-		String s = "";
+		String s = "" + move + " -> " ;
 		for(int i=0; i<state.length;i++)
 			s += "" + state[i];
 		return s;

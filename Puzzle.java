@@ -147,7 +147,7 @@ class Puzzle
 				//System.out.println(open.get(i));
 		//	System.out.println("d");	
 			ls = getLeastCost();
-			System.out.println(i + " - " +ls + " - " + ls.getCost());	
+			//System.out.println(i + " - " +ls + " - " + ls.getCost());	
 		 	i++;
 			//for(int i=0; i< open.size(); i++)
 				//System.out.println(open.get(i));
@@ -157,15 +157,32 @@ class Puzzle
 		// when goal is founded :) we need to determine the path .. the total path of nodes expanded is in the close
 		// however we need only the right path... traversal from the goal through parents to root :)
 		int j=0;
+		/*
 		while( !(ls.equals(initialState)) )
 		{
+			System.out.println(ls + " - " + ls.getMove());	
 			ls = ls.getParent();
 			j++;
 			// put this on a file or something..
 			//System.out.println(ls);
 			//System.out.println(j + " - " +ls + " - " + ls.getCost());	
 		}
-		System.out.println(j);
-		
+		*/
+		//Collections.reverse(arrayList);
+		ArrayList path = getPlayPath(ls);
+		//System.out.println(j);
+		System.out.println(path);
 	}
+	
+	public ArrayList getPlayPath(State goalReached)
+	{
+		ArrayList reversedPath = new ArrayList();
+		while(!(goalReached.equals(initialState))){
+			reversedPath.add(goalReached);
+			goalReached = goalReached.getParent();
+		}
+		Collections.reverse(reversedPath);
+		return reversedPath;
+	}
+	
 }
