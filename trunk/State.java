@@ -11,6 +11,15 @@ class State implements Cloneable
 	private int PUZZLE_WIDTH;
 	private int cost;
 	
+	
+	public State(int[] state){
+		this.state = state;
+		this.parent = null;
+		this.cost = 0;
+		this.id = LAST_ID++;
+		PUZZLE_WIDTH = (int)Math.sqrt(state.length);
+	}
+	
 	public State(int[] state, State parent){
 		this.state = state;
 		this.parent = parent;
