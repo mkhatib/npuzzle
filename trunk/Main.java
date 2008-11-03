@@ -117,14 +117,22 @@ public final class Main {
 		
 		
 		*/
-		int[] initialState = {1,2,3,4,5,6,7,0,8};
+		int[] initialState = {1,2,3,4,5,0,6,7,8};
 		int[] goal = {1,2,3,4,5,6,7,8,0};
-				
 		Puzzle puzzle = new Puzzle(new State(initialState),new State(goal));
 		puzzle.solve();
+		
+		/*
+		State i = new State(initialState);
+		i.getCost();
+		System.out.println(i.canMoveRight());
+		System.out.println(i.canMoveLeft());
+		System.out.println(i.canMoveUp());
+		System.out.println(i.canMoveDown());
 		// puzzle.solve()
 		
-		
+		//123456078
+		//103426758
 	
 		//int f = calculateFh(state,goal);
 		

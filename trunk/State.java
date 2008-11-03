@@ -186,9 +186,12 @@ class State implements Cloneable
 		State newState = new State(_state,this);
 		return newState;
 	}
-	
+		
 	public String toString(){
-		return state.toString();
+		String s = "";
+		for(int i=0; i<state.length;i++)
+			s += "" + state[i];
+		return s;
 	}
-	
+
 }   
