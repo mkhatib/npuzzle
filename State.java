@@ -11,8 +11,15 @@ class State implements Cloneable
 	private int PUZZLE_WIDTH;
 	private int cost;
 	
-	public State(int[] state){
+	public State(int[] state, State parent){
 		this.state = state;
+		this.parent = parent;
+		if(Puzzle.getCostFunction() == Puzzle.TILES_OUT_OF_PLACE)
+			this.cost = tilesOutOfPlace(this,Puzzle.getGoal());
+		else if( Puzzle.getCostFunction() == Puzzle.MANHATEN_DISTANCE)
+			this.cost = manhatenDistance(this,Puzzle.getGoal());
+		if (this.parent != null)
+			this.cost += this.parent.getCost();
 		this.id = LAST_ID++;
 		PUZZLE_WIDTH = (int)Math.sqrt(state.length);
 	}
@@ -70,6 +77,38 @@ class State implements Cloneable
 	}
 	
 
+	public int tilesOutOfPlace(State s,State g)
+	{
+		int h1=0;
+		int rowgoal=0,rowstate=0,colgoal=0,colstate=0;
+		int[] state = s.getState();
+		int[] goal = g.getState();
+		// calculate h1, which is the number of tiles out of place
+		for(int m=0; m< state.length; m++)
+		{
+			if(state[m] != goal[m] ) 
+			h1++;
+		}
+		return h1; //  return the function for the search..
+	}
+	public int manhatenDistance(State s, State g){
+		int h2=0;
+		int rowgoal=0,rowstate=0,colgoal=0,colstate=0;
+		int[] state = s.getState();
+		int[] goal = g.getState();
+		// calculate h2 , which is the manhaten distance between the tile and the goal state of it
+		for(int k=0; k< state.length; k++)
+		{
+			if( state[k] ==0 )
+				rowgoal = PUZZLE_WIDTH-1;
+			else rowgoal = /*(goal[state[k]-1]<PUZZLE_WIDTH)? 0 : */ (state[k]-1)/PUZZLE_WIDTH; // we can omet the goal and -1
+			rowstate = /*(k<PUZZLE_WIDTH)? 0 : */ k/PUZZLE_WIDTH;
+			colgoal = (state[k]==0)? PUZZLE_WIDTH-1 :(state[k]-1 )%PUZZLE_WIDTH;//Math.abs(k - rowgoal*PUZZLE_WIDTH);
+			colstate= k%PUZZLE_WIDTH;
+			h2+=( Math.abs(rowgoal - rowstate) + Math.abs(colgoal - colstate) );
+		}
+		return h2;
+	}
 	
 	
 	public ArrayList expand()
@@ -79,22 +118,15 @@ class State implements Cloneable
 		State newState = canMoveUp();
 		if(newState != null)
 			expandList.add(newState);
-			newState.setParent(this);
 		newState = canMoveDown();
-		if(newState != null) {
+		if(newState != null) 
 			expandList.add(newState);
-			newState.setParent(this);
-		}
 		newState = canMoveRight();
-		if(newState != null) {
+		if(newState != null) 
 			expandList.add(newState);
-			newState.setParent(this);
-		}
 		newState = canMoveLeft();
-		if(newState != null) {
+		if(newState != null) 
 			expandList.add(newState);
-			newState.setParent(this);
-		}
 		return expandList;
 	}
 	
@@ -108,7 +140,7 @@ class State implements Cloneable
 			return null;
 		}
 		int[] _state = Utility.swap(emptyPosition,emptyPosition-PUZZLE_WIDTH , state.clone());
-		State newState = new State(_state);
+		State newState = new State(_state,this);
 		return newState;
 	}
 	
@@ -120,7 +152,7 @@ class State implements Cloneable
 			return null;
 		}
 		int[] _state = Utility.swap(emptyPosition,emptyPosition+PUZZLE_WIDTH , state.clone());
-		State newState = new State(_state);
+		State newState = new State(_state,this);
 		return newState;
 	}
 	public State canMoveRight()
@@ -131,7 +163,7 @@ class State implements Cloneable
 			return null;
 		}
 		int[] _state = Utility.swap(emptyPosition,emptyPosition+1 , state.clone());
-		State newState = new State(_state);
+		State newState = new State(_state,this);
 		return newState;
 	}
 	public State canMoveLeft()
@@ -142,7 +174,12 @@ class State implements Cloneable
 			return null;
 		}
 		int[] _state = Utility.swap(emptyPosition,emptyPosition-1 , state.clone());
-		State newState = new State(_state);
+		State newState = new State(_state,this);
 		return newState;
 	}
+	
+	public String toString(){
+		return state.toString();
+	}
+	
 }   
