@@ -21,6 +21,7 @@ class State implements Cloneable
 	}
 	
 	public State(int[] state, State parent){
+	PUZZLE_WIDTH = (int)Math.sqrt(state.length);
 		this.state = state;
 		this.parent = parent;
 		if(Puzzle.getCostFunction() == Puzzle.TILES_OUT_OF_PLACE)
@@ -30,7 +31,7 @@ class State implements Cloneable
 		if (this.parent != null)
 			this.cost += this.parent.getCost();
 		this.id = LAST_ID++;
-		PUZZLE_WIDTH = (int)Math.sqrt(state.length);
+		//PUZZLE_WIDTH = (int)Math.sqrt(state.length);
 	}
 	
 	
