@@ -194,5 +194,65 @@ class State implements Cloneable
 			s += "" + state[i];
 		return s;
 	}
+	
+	public State canMoveUpTorus()
+	{
+		int emptyPosition = Utility.whereIn(state,0);
+		// If it's in the first line which mean its position is 0,1, or 2
+		if(emptyPosition < PUZZLE_WIDTH){
+			//return null;
+			int[] _state2 = Utility.swap(emptyPosition, (emptyPosition + PUZZLE_WIDTH * (PUZZLE_WIDTH -1) ) , state.clone());
+			State newState2 = new State(_state2,this);
+			return newState2;
+		}
+		int[] _state = Utility.swap(emptyPosition,emptyPosition-PUZZLE_WIDTH , state.clone());
+		State newState = new State(_state,this);
+		return newState;
+	}
+	
+	public State canMoveDownTorus()
+	{
+		int emptyPosition = Utility.whereIn(state,0);
+		// If it's in the last line which mean its position is 0,1, or 2
+		if(emptyPosition/PUZZLE_WIDTH == PUZZLE_WIDTH-1){
+			//return null;
+			int[] _state2 = Utility.swap(emptyPosition, (emptyPosition- (PUZZLE_WIDTH * PUZZLE_WIDTH -1) ) , state.clone());
+			State newState2 = new State(_state2,this);
+			return newState2;
+		}
+		int[] _state = Utility.swap(emptyPosition,emptyPosition+PUZZLE_WIDTH , state.clone());
+		State newState = new State(_state,this);
+		return newState;
+	}
+	public State canMoveLeftTorus()
+	{
+		int emptyPosition = Utility.whereIn(state,0);
+		// If it's in the last line which mean its position is 0,1, or 2
+		if(emptyPosition % PUZZLE_WIDTH == 0){
+			//return null;
+			int[] _state2 = Utility.swap(emptyPosition,(emptyPosition + (PUZZLE_WIDTH -1) ), state.clone());
+			State newState2 = new State(_state2,this);
+			return newState2;
+		}
+		int[] _state = Utility.swap(emptyPosition,emptyPosition-1 , state.clone());
+		State newState = new State(_state,this);
+		return newState;
+	}
+	
+	public State canMoveRightTorus()
+	{
+		int emptyPosition = Utility.whereIn(state,0);
+		// If it's in the first line which mean its position is 0,1, or 2
+		if( emptyPosition % PUZZLE_WIDTH == PUZZLE_WIDTH -1 ){
+			//return null;
+			int[] _state2 = Utility.swap(emptyPosition,(emptyPosition - (PUZZLE_WIDTH -1) ), state.clone());
+			State newState2 = new State(_state2,this);
+			return newState2;
+		}
+		int[] _state = Utility.swap(emptyPosition,emptyPosition+1 , state.clone());
+		State newState = new State(_state,this);
+		return newState;
+	}
+	
 
 }   
