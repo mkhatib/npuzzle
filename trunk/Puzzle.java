@@ -123,9 +123,25 @@ class Puzzle
 	
 	public void solve()
 	{
+		// compare this state with the goal state,, 
 		State ls = getLeastCost();
+		while( !(ls.equals(goal)) )// not end of the game
+		{
 		ArrayList expandedStates = ls.expand();
+		close.add(ls);
 		open.addAll(expandedStates);
+		ls = getLeastCost();
+		}
+		
+		// when goal is founded :) we need to determine the path .. the total path of nodes expanded is in the close
+		// however we need only the right path... traversal from the goal through parents to root :)
+	
+		while( !(ls.equals(initialeState)) )
+		{
+			ls = ls.getParent();
+			// put this on a file or something..
+		
+		{
 		
 	}
 }

@@ -31,6 +31,14 @@ class State implements Cloneable
 		return cost;
 	}
 	
+	public State getParent(){
+		return parent;
+	}
+	
+	public void setParent(State s) {
+		this.parent=s;
+	}
+	
 	public int calculateInversions()
 	{
 		boolean[] numbers = new boolean[state.length];
@@ -71,15 +79,22 @@ class State implements Cloneable
 		State newState = canMoveUp();
 		if(newState != null)
 			expandList.add(newState);
+			newState.setParent(this);
 		newState = canMoveDown();
-		if(newState != null)
+		if(newState != null) {
 			expandList.add(newState);
+			newState.setParent(this);
+		}
 		newState = canMoveRight();
-		if(newState != null)
+		if(newState != null) {
 			expandList.add(newState);
+			newState.setParent(this);
+		}
 		newState = canMoveLeft();
-		if(newState != null)
+		if(newState != null) {
 			expandList.add(newState);
+			newState.setParent(this);
+		}
 		return expandList;
 	}
 	
