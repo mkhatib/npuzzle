@@ -9,10 +9,11 @@ class Puzzle
 {
 	static private ArrayList open = new ArrayList();
 	static private ArrayList closed = new ArrayList();
-	private State goal;
+	private static State goal;
 	private State initialState;
 	private final int PUZZLE_WIDTH;
-	
+	public static final int TILES_OUT_OF_PLACE=0, MANHATEN_DISTANCE=1;
+	private static int costFunction=TILES_OUT_OF_PLACE;
 	
 	public Puzzle(State initialState, State goalState)
 	{
@@ -22,6 +23,16 @@ class Puzzle
 		this.PUZZLE_WIDTH = (int)Math.sqrt(initialState.getState().length);
 	}
 	
+	
+	public static State getGoal()
+	{
+		return goal;
+	}
+	
+	public static int getCostFunction()
+	{
+		return costFunction;
+	}
 	/**
 	 * getLeastCost()
 	 * 
@@ -85,32 +96,7 @@ class Puzzle
 	 * @param  State, State
 	 * @return int 
 	 */
-	public int calculateFh(State s,State g)
-	{
-		int h1=0,h2=0;
-		int rowgoal=0,rowstate=0,colgoal=0,colstate=0;
-		int[] state = s.getState();
-		int[] goal = g.getState();
-		// calculate h1, which is the number of tiles out of place
-		for(int m=0; m< state.length; m++)
-		{
-			if(state[m] != goal[m] ) 
-			h1++;
-		}
 
-		// calculate h2 , which is the manhaten distance between the tile and the goal state of it
-		for(int k=0; k< state.length; k++)
-		{
-			if( state[k] ==0 )
-				rowgoal = PUZZLE_WIDTH-1;
-			else rowgoal = /*(goal[state[k]-1]<PUZZLE_WIDTH)? 0 : */ (state[k]-1)/PUZZLE_WIDTH; // we can omet the goal and -1
-			rowstate = /*(k<PUZZLE_WIDTH)? 0 : */ k/PUZZLE_WIDTH;
-			colgoal = (state[k]==0)? PUZZLE_WIDTH-1 :(state[k]-1 )%PUZZLE_WIDTH;//Math.abs(k - rowgoal*PUZZLE_WIDTH);
-			colstate= k%PUZZLE_WIDTH;
-			h2+=( Math.abs(rowgoal - rowstate) + Math.abs(colgoal - colstate) );
-		}
-		return (h1 +h2); //  return the function for the search..
-	}
 	
 	public boolean isSolvable()
 	{
@@ -127,21 +113,21 @@ class Puzzle
 		State ls = getLeastCost();
 		while( !(ls.equals(goal)) )// not end of the game
 		{
-		ArrayList expandedStates = ls.expand();
-		close.add(ls);
-		open.addAll(expandedStates);
-		ls = getLeastCost();
+			ArrayList expandedStates = ls.expand();
+			closed.add(ls);
+			open.addAll(expandedStates);
+			ls = getLeastCost();
 		}
 		
 		// when goal is founded :) we need to determine the path .. the total path of nodes expanded is in the close
 		// however we need only the right path... traversal from the goal through parents to root :)
 	
-		while( !(ls.equals(initialeState)) )
+		while( !(ls.equals(initialState)) )
 		{
 			ls = ls.getParent();
 			// put this on a file or something..
-		
-		{
+			
+		}
 		
 	}
 }

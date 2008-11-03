@@ -117,7 +117,7 @@ public final class Main {
 		
 		
 		
-		Puzzle puzzle = new Puzzle(new State(initialState),new State(goal));
+		Puzzle puzzle = new Puzzle(new State(initialState,null),new State(goal,null)	);
 		// puzzle.solve()
 		
 		
@@ -128,8 +128,8 @@ public final class Main {
 		System.out.println(f);
 		
 		
-		State ss1 = new State(new int[] {1,2,3});
-		State ss2 = new State(new int[] {1,2,3});
+		State ss1 = new State(new int[] {1,2,3},null);
+		State ss2 = new State(new int[] {1,2,3},null);
 		
 		System.out.println(ss1.equals(ss2));
 		
