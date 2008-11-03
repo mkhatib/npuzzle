@@ -15,6 +15,9 @@ class Puzzle
 	public static final int TILES_OUT_OF_PLACE=0, MANHATEN_DISTANCE=1;
 	private static int costFunction=MANHATEN_DISTANCE;//TILES_OUT_OF_PLACE;
 	
+	public static final int MODIFIED_PUZZLE=0, NORMAL_PUZZLE=1;
+	private static int puzzleType=MODIFIED_PUZZLE;//TILES_OUT_OF_PLACE;
+	
 	
 	public Puzzle(State initialState, State goalState)
 	{
@@ -35,6 +38,10 @@ class Puzzle
 	public static int getCostFunction()
 	{
 		return costFunction;
+	}
+	public static int getPuzzleType()
+	{
+		return puzzleType;
 	}
 	/**
 	 * getLeastCost()
@@ -140,8 +147,8 @@ class Puzzle
 				//System.out.println(open.get(i));
 		//	System.out.println("d");	
 			ls = getLeastCost();
-			//System.out.println(i + " - " +ls + " - " + ls.getCost());	
-		//	i++;
+			System.out.println(i + " - " +ls + " - " + ls.getCost());	
+		 	i++;
 			//for(int i=0; i< open.size(); i++)
 				//System.out.println(open.get(i));
 			//System.out.println(ls + " - " + ls.getCost());	
@@ -149,15 +156,16 @@ class Puzzle
 		//System.out.println("fffff");	
 		// when goal is founded :) we need to determine the path .. the total path of nodes expanded is in the close
 		// however we need only the right path... traversal from the goal through parents to root :)
-	i = 0;
+		int j=0;
 		while( !(ls.equals(initialState)) )
 		{
 			ls = ls.getParent();
+			j++;
 			// put this on a file or something..
 			//System.out.println(ls);
-			System.out.println(i + " - " +ls + " - " + ls.getCost());	
-			i++;
+			//System.out.println(j + " - " +ls + " - " + ls.getCost());	
 		}
+		System.out.println(j);
 		
 	}
 }
