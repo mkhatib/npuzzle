@@ -8,7 +8,7 @@ class State implements Cloneable
 	private int id;
 	private int[] state;
 	private State parent;
-	private char move;
+	private char move=' ';
 	private int PUZZLE_WIDTH;
 	private int cost;
 	
@@ -219,7 +219,11 @@ class State implements Cloneable
 	}
 		
 	public String toString(){
-		String s = "" + move + " -> " ;
+		String s= "";
+		if (move!=' ')
+		 	s = "Move '" + move + "' - " ;
+		else
+			s = "Initially - " ;
 		for(int i=0; i<state.length;i++)
 			s += "" + state[i];
 		return s;

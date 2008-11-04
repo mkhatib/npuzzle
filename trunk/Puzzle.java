@@ -1,22 +1,34 @@
 /*
 	TODO 
-		- Implements Solve Method
-		- Implements isSolvable Method
-		- 
+		- Try To solve it for 15 puzzle
+		- Implements isSolvable Method For 15 Puzzle
+		- Check Solvability before starting
 */
 import java.util.*;
+import java.awt.event.*;
 class Puzzle
 {
+	private ArrayList listeners;
 	static private ArrayList open = new ArrayList();
 	static private ArrayList closed = new ArrayList();
+	
+	private ArrayList directionsToWin=new ArrayList();
+	// Puzzle Constants
+	public static final int TILES_OUT_OF_PLACE=0, MANHATEN_DISTANCE=1;
+	public static final int MODIFIED_PUZZLE=1, NORMAL_PUZZLE=0;
+	
+	// Puzzle Properties 
 	private static State goal;
 	private State initialState;
-	private final int PUZZLE_WIDTH;
-	public static final int TILES_OUT_OF_PLACE=0, MANHATEN_DISTANCE=1;
-	private static int costFunction=MANHATEN_DISTANCE;//TILES_OUT_OF_PLACE;
+	private int PUZZLE_WIDTH;
+	private static int costFunction=TILES_OUT_OF_PLACE;
+	private static int puzzleType=NORMAL_PUZZLE;
 	
-	public static final int MODIFIED_PUZZLE=0, NORMAL_PUZZLE=1;
-	private static int puzzleType=MODIFIED_PUZZLE;//TILES_OUT_OF_PLACE;
+	// Flags
+	public static final int STOPPED=0,SOLVING=1,DONE=2;
+	private int status=STOPPED;
+	private int stepNumber=0;
+	private int timeElapsed=0;
 	
 	
 	public Puzzle(State initialState, State goalState)
@@ -25,16 +37,18 @@ class Puzzle
 		this.initialState = initialState;
 		this.goal = goalState;
 		this.PUZZLE_WIDTH = (int)Math.sqrt(initialState.getState().length);
-		//System.out.println(initialState + " - " + goal + " - " + PUZZLE_WIDTH + " - " );
 	}
 	
 
-	
+	// Getters
+	public int getStatus()
+	{
+		return status;
+	}
 	public static State getGoal()
 	{
 		return goal;
 	}
-	
 	public static int getCostFunction()
 	{
 		return costFunction;
@@ -42,6 +56,55 @@ class Puzzle
 	public static int getPuzzleType()
 	{
 		return puzzleType;
+	}
+	public State getInitialState(){
+		return initialState;
+	}
+	public int getPuzzleWidth(){
+		return PUZZLE_WIDTH;
+	}
+	public ArrayList getDirectionsToWin(){
+		return directionsToWin;
+	}
+	public int getStepNumber()
+	{
+		return stepNumber;
+	}
+	public int getTimeElapsed()
+	{
+		return timeElapsed;
+	}
+	
+	// Setters
+	public void setGoal(State state)
+	{
+		goal = state;
+		//stateChanged(new ActionEvent(null,1, "Goal"));
+	}
+	public void setInitialState(State state)
+	{
+		closed.clear();
+		open.clear();
+		open.add(state);
+		initialState = state;
+		//stateChanged(new ActionEvent(null,1, "Initial State"));
+	}
+	public void setCostFunction(int fun)
+	{
+		this.costFunction = fun;
+		//stateChanged(new ActionEvent(null,1, "Cost Function"));
+	}
+	public void setPuzzleWidth(int width){
+		this.PUZZLE_WIDTH = width;
+		//stateChanged(new ActionEvent(null,1, "Width"));
+	}
+	public void setPuzzleType(int type){
+		this.puzzleType = type;
+		//stateChanged(new ActionEvent(null,1, "Type"));
+	}
+	
+	public void setStepNumber(int stepNumber){
+		this.stepNumber = stepNumber;
 	}
 	/**
 	 * getLeastCost()
@@ -118,61 +181,61 @@ class Puzzle
 	
 	public boolean isSolvable()
 	{
-		if((PUZZLE_WIDTH % 2 != 0) && (initialState.calculateInversions() % 2 == 0))
+		int index = Utility.whereIn(initialState.getState(), 0);
+		int inversions = initialState.calculateInversions();
+		if(PUZZLE_WIDTH % 2 == 0){
+			// blank is on odd row , and inversions are ever
+			if(((index/PUZZLE_WIDTH) % 2 != 0) && (inversions % 2 == 0)) 
+				return true;
+			// blank is on even row , and inversions are odd
+			else if(((index/PUZZLE_WIDTH) % 2 == 0) && (inversions % 2 != 0)) 
+				return true;
+			else
+				return false;
+		}
+		else if((inversions % 2 == 0))
 			return true;
 		return false;
 	}
 	
-	
-	
-	public void solve()
+	public void stopSolving()
 	{
+		status = STOPPED;
+	}
+	
+	public void startSolving()
+	{
+		directionsToWin.clear();
+		status = SOLVING;
 		// compare this state with the goal state,, 
-		//System.out.println("a");	
-		//System.out.println(open.size());
 		State ls = getLeastCost();
-		//System.out.println(open.size());
-		//System.out.println("b");
 		int i=0;	
 		System.out.println(ls + " - " + ls.getCost());	
 		while(!(ls.equals(goal)) )// not end of the game
 		{
-		//	System.out.println("c");	
+			if(status == STOPPED) break;
 			ArrayList expandedStates = ls.expand();
-			//System.out.println(open.size());
 			closed.add(ls);
 			open.addAll(expandedStates);
-			//System.out.println(open.size());
-			//for(int i=0; i< open.size(); i++)
-				//System.out.println(open.get(i));
-		//	System.out.println("d");	
 			ls = getLeastCost();
-			//System.out.println(i + " - " +ls + " - " + ls.getCost());	
 		 	i++;
-			//for(int i=0; i< open.size(); i++)
-				//System.out.println(open.get(i));
-			//System.out.println(ls + " - " + ls.getCost());	
 		}
-		//System.out.println("fffff");	
 		// when goal is founded :) we need to determine the path .. the total path of nodes expanded is in the close
 		// however we need only the right path... traversal from the goal through parents to root :)
-		int j=0;
-		/*
-		while( !(ls.equals(initialState)) )
+		if(status != STOPPED)
 		{
-			System.out.println(ls + " - " + ls.getMove());	
-			ls = ls.getParent();
-			j++;
-			// put this on a file or something..
-			//System.out.println(ls);
-			//System.out.println(j + " - " +ls + " - " + ls.getCost());	
-		}
-		*/
-		//Collections.reverse(arrayList);
-		ArrayList path = getPlayPath(ls);
-		//System.out.println(j);
-		System.out.println(path);
+			directionsToWin = getPlayPath(ls);
+			goalFound(new ActionEvent(this,0,"Goal Found"));
+			status = DONE;
+		}	
+		open.clear();
+		closed.clear();
+		//
+		//System.out.println(directionsToWin);
+		//goalReached(path);
 	}
+	
+	
 	
 	public ArrayList getPlayPath(State goalReached)
 	{
@@ -185,4 +248,32 @@ class Puzzle
 		return reversedPath;
 	}
 	
+	
+	public void addListener(PuzzleListener l){
+		if(listeners == null)
+			listeners = new ArrayList();
+		listeners.add(l);
+	}
+	
+	public void stateChanged(ActionEvent e){
+		ArrayList listenersCopy;
+		if(listeners == null) return;
+		synchronized(listeners){
+			listenersCopy = (ArrayList)listeners.clone();
+		}
+		
+		for(int i=0; i < listenersCopy.size(); i++)
+			((PuzzleListener)listenersCopy.get(i)).stateChanged(e);
+	}
+	
+	public void goalFound(ActionEvent e){
+		ArrayList listenersCopy;
+		if(listeners == null) return;
+		synchronized(listeners){
+			listenersCopy = (ArrayList)listeners.clone();
+		}
+		
+		for(int i=0; i < listenersCopy.size(); i++)
+			((PuzzleListener)listenersCopy.get(i)).goalFound(e);
+	}
 }
