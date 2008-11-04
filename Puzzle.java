@@ -1,25 +1,26 @@
-/**
-	* class puzzle 
-	* represents the whole game
-	
-**/
+/*
+	TODO 
+		- Try To solve it for 15 puzzle
+		- Implements isSolvable Method For 15 Puzzle
+		- Check Solvability before starting
+*/
 import java.util.*;
 import java.awt.event.*;
 class Puzzle
 {
 	private ArrayList listeners;
-	static private ArrayList open = new ArrayList();	// this array contains the states to be expanded
-	static private ArrayList closed = new ArrayList();	// this array contains the expanded states
+	static private ArrayList open = new ArrayList();
+	static private ArrayList closed = new ArrayList();
 	
 	private ArrayList directionsToWin=new ArrayList();
 	// Puzzle Constants
-	public static final int TILES_OUT_OF_PLACE=0, MANHATEN_DISTANCE=1;	// to determine which heuristic to use
+	public static final int TILES_OUT_OF_PLACE=0, MANHATEN_DISTANCE=1;
 	public static final int MODIFIED_PUZZLE=1, NORMAL_PUZZLE=0;
 	
 	// Puzzle Properties 
-	private static State goal;		// goal state determined by user
-	private State initialState;		// initial state determined by user
-	private int PUZZLE_WIDTH;		// puzzle width
+	private static State goal;
+	private State initialState;
+	private int PUZZLE_WIDTH;
 	private static int costFunction=TILES_OUT_OF_PLACE;
 	private static int puzzleType=NORMAL_PUZZLE;
 	
@@ -78,6 +79,7 @@ class Puzzle
 	public void setGoal(State state)
 	{
 		goal = state;
+		//stateChanged(new ActionEvent(null,1, "Goal"));
 	}
 	public void setInitialState(State state)
 	{
@@ -85,16 +87,20 @@ class Puzzle
 		open.clear();
 		open.add(state);
 		initialState = state;
+		//stateChanged(new ActionEvent(null,1, "Initial State"));
 	}
 	public void setCostFunction(int fun)
 	{
 		this.costFunction = fun;
+		//stateChanged(new ActionEvent(null,1, "Cost Function"));
 	}
 	public void setPuzzleWidth(int width){
 		this.PUZZLE_WIDTH = width;
+		//stateChanged(new ActionEvent(null,1, "Width"));
 	}
 	public void setPuzzleType(int type){
 		this.puzzleType = type;
+		//stateChanged(new ActionEvent(null,1, "Type"));
 	}
 	
 	public void setStepNumber(int stepNumber){
@@ -113,6 +119,7 @@ class Puzzle
 	public State getLeastCost()
 	{
 		// 1. Bring the Least Open cost
+		
 		State minState, tmpState;
 		minState = ((State)open.get(0));
 		int minStateIndex = 0;
@@ -120,7 +127,9 @@ class Puzzle
 			tmpState = ((State)open.get(i));
 			if(tmpState.getCost() < minState.getCost())
 			{
+				//System.out.println(tmpState.getCost() + " ---- " + minState.getCost());
 				minState = tmpState;
+				//System.out.println(minState);
 				minStateIndex = i;
 			}
 			
@@ -132,7 +141,9 @@ class Puzzle
 			closedState = (State)closed.get(inClosed);
 		if(closedState == null)
 		{
+			//System.out.println("d");
 			State stateToReturn = minState.copyState();
+			//System.out.println(stateToReturn);
 			closed.add(minState);
 			open.remove(minStateIndex);
 			return  stateToReturn;
@@ -154,15 +165,20 @@ class Puzzle
 			open.remove(minStateIndex);
 			return getLeastCost();
 		}	
-	
+		//return null;
+		// 3. If not, or its cost is less than the closed one then exapnd it.
+		// 4. Add the expanded states to the open list
+		// 5. Add the current node to the closed list
 	}
 	
-
 	/**
-	*  this function checks it the given state is solvable or not.
-	* if the puzzle width is even , then it has to check twp options: blank is on odd row , and inversions are ever  OR  blank is on even row , and inversions are odd
-	* if the puzzle width is odd, then test for the inversions to be even..
-	**/
+	 * calculateFh
+	 *
+	 * @param  State, State
+	 * @return int 
+	 */
+
+	
 	public boolean isSolvable()
 	{
 		int index = Utility.whereIn(initialState.getState(), 0);
@@ -177,29 +193,24 @@ class Puzzle
 			else
 				return false;
 		}
-		else if((inversions % 2 == 0))	// for odd width
+		else if((inversions % 2 == 0))
 			return true;
 		return false;
 	}
 	
-	/** 
-	* this function changes the status of the game to stop
-	**/
 	public void stopSolving()
 	{
 		status = STOPPED;
 	}
 	
-	/** 
-	* this function starts soliving,  changes the status, fill the directions to win..
-	**/
 	public void startSolving()
 	{
 		directionsToWin.clear();
 		status = SOLVING;
+		// compare this state with the goal state,, 
 		State ls = getLeastCost();
 		int i=0;	
-		//System.out.println(ls + " - " + ls.getCost());	
+		System.out.println(ls + " - " + ls.getCost());	
 		while(!(ls.equals(goal)) )// not end of the game
 		{
 			if(status == STOPPED) break;
@@ -219,13 +230,13 @@ class Puzzle
 		}	
 		open.clear();
 		closed.clear();
-		
+		//
+		//System.out.println(directionsToWin);
+		//goalReached(path);
 	}
 	
 	
-	/** 
-	this function returns the path to solve the game .. reversing the path from the goal node  through its parent to the intial state.
-	**/
+	
 	public ArrayList getPlayPath(State goalReached)
 	{
 		ArrayList reversedPath = new ArrayList();

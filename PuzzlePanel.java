@@ -15,6 +15,7 @@ class PuzzlePanel extends JPanel implements PuzzleListener, ActionListener{
 	// Model store all the data
 	private Puzzle model;
 	private JButton[] tilesButtons;
+	private Icon[] icons;
 	private JButton nextStateControl = new JButton("Next");
 	private JButton prevStateControl = new JButton("Previous");
 	private ArrayList directionsToWin = new ArrayList();
@@ -58,11 +59,20 @@ class PuzzlePanel extends JPanel implements PuzzleListener, ActionListener{
 		setLayout(new BorderLayout());
 		
 		tilesButtons = new JButton[numOfTiles];
+		icons = new ImageIcon[numOfTiles];
+		for (int i=0;i< numOfTiles ; i++)
+			icons[i] = new ImageIcon("images/" + width + "x" + width + "/" + (i) + ".png");
 		for (int i=0;i< numOfTiles ; i++)
 		{
-			tilesButtons[i] = new JButton(""+initialTiles[i]);
+			tilesButtons[i] = new JButton(/*""+initialTiles[i]*/icons[initialTiles[i]]);
+			//if(i!=numOfTiles-1)
+			
+			tilesButtons[i].setIcon(icons[initialTiles[i]]);
+			tilesButtons[i].setBorderPainted(false);
 			tilesPanel.add(tilesButtons[i]);
 		}
+		//icons[numOfTiles-1] = new ImageIcon("images/" + width + "x" + width + "/" + (initialTiles[numOfTiles-1]) + ".png");
+		//tilesButtons[(numOfTiles-1)].setIcon(icons[numOfTiles-1]);
 		add(tilesPanel, BorderLayout.CENTER);
 		
 	}
@@ -133,7 +143,8 @@ class PuzzlePanel extends JPanel implements PuzzleListener, ActionListener{
 		{
 			for (int i=0;i< state.length ; i++)
 			{
-				tilesButtons[i].setText(""+state[i]) /*= new JButton(""+state[i])*/;
+				//tilesButtons[i].setText(""+state[i]) /*= new JButton(""+state[i])*/;
+				tilesButtons[i].setIcon(icons[state[i]]);
 				//add(tilesButtons[i]);
 			}
 		}
