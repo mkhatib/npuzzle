@@ -1,18 +1,24 @@
 import java.util.ArrayList;
 import java.util.Arrays;
+
+	/** 
+	* this class represents each state.
+	**/
 class State implements Cloneable
 {
-	// private ArrayList children;
+	
 
 	static private int LAST_ID = 0;
-	private int id;
-	private int[] state;
-	private State parent;
+	private int id;			// the id of this state
+	private int[] state;	// array of the tiles which are in the state
+	private State parent;	// contains the parent of this node
 	private char move=' ';
-	private int PUZZLE_WIDTH;
-	private int cost;
+	private int PUZZLE_WIDTH; 
+	private int cost;	// cost of this state
 	
-	
+	/** 
+	state constructor
+	**/
 	public State(int[] state){
 		this.state = state;
 		this.parent = null;
@@ -21,6 +27,10 @@ class State implements Cloneable
 		PUZZLE_WIDTH = (int)Math.sqrt(state.length);
 	}
 	
+	/** 
+	this constructor, gets the array of tiles and the parent of each state
+	calculates the cummulative cost of the state.. 
+	**/
 	public State(int[] state, State parent){
 		PUZZLE_WIDTH = (int)Math.sqrt(state.length);
 		this.state = state;
@@ -33,7 +43,6 @@ class State implements Cloneable
 		if (this.parent != null)
 			this.cost += this.parent.getCost();
 		this.id = LAST_ID++;
-		//PUZZLE_WIDTH = (int)Math.sqrt(state.length);
 	}
 	
 	public State(int[] state, State parent, char move){
@@ -41,9 +50,7 @@ class State implements Cloneable
 		this.move = move;
 	}
 	
-	public char getMove(){
-		return move;
-	}
+	// compares two states' tiles together
 	public boolean equals(Object o){
 		return (Arrays.equals(this.getState(),((State)o).getState()));
 	}
@@ -56,6 +63,10 @@ class State implements Cloneable
 		return cost;
 	}
 	
+	public char getMove(){
+		return move;
+	}
+	
 	public State getParent(){
 		return parent;
 	}
@@ -64,6 +75,10 @@ class State implements Cloneable
 		this.parent=s;
 	}
 	
+	/**
+	this functions calculates the inversions of the given state.
+	An inversion is when a tile precedes another tile with a lower number on it. 
+	**/
 	public int calculateInversions()
 	{
 		boolean[] numbers = new boolean[state.length];
@@ -80,7 +95,7 @@ class State implements Cloneable
 		}
 		return inversions;
 	}
-	
+	// copy state bu clone function.
 	public State copyState()
 	{
 		try {
@@ -89,12 +104,13 @@ class State implements Cloneable
 		catch(CloneNotSupportedException cnsex){
 			System.out.println("CloneNotSupportedException::State.java::Line(55)");
 			System.exit(0);
-			//return null;
 		}
 		return null;
 	}
 	
-
+		/**
+		first heuristic.. number o tiles not at its place
+		**/
 	public int tilesOutOfPlace(State s,State g)
 	{
 		int h1=0;
@@ -109,6 +125,10 @@ class State implements Cloneable
 		}
 		return h1; //  return the function for the search..
 	}
+	
+		/**
+		second heuristic.. manhatten distance.. the distance between a tile and its goal place
+		**/
 	public int manhatenDistance(State s, State g){
 		int h2=0;
 		int rowgoal=0,rowstate=0,colgoal=0,colstate=0;
@@ -116,21 +136,24 @@ class State implements Cloneable
 		int[] goal = g.getState();
 		// calculate h2 , which is the manhaten distance between the tile and the goal state of it
 		for(int k=0; k< state.length; k++)
-		{
+		{	//  calculate the row of the tile at the goal , and at the state
 			if( state[k] ==0 )
-				rowgoal = PUZZLE_WIDTH-1;
+				rowgoal = PUZZLE_WIDTH-1;	
 			else{
-				rowgoal = /*(goal[state[k]-1]<PUZZLE_WIDTH)? 0 : */ (state[k]-1)/PUZZLE_WIDTH; // we can omet the goal and -1
+				rowgoal =(state[k]-1)/PUZZLE_WIDTH; 
 			} 
-			rowstate = /*(k<PUZZLE_WIDTH)? 0 : */ k/PUZZLE_WIDTH;
-			colgoal = (state[k]==0)? PUZZLE_WIDTH-1 :(state[k]-1 )%PUZZLE_WIDTH;//Math.abs(k - rowgoal*PUZZLE_WIDTH);
+			rowstate = k/PUZZLE_WIDTH;
+			//  calculate the col of the tile at the goal , and at the state
+			colgoal = (state[k]==0)? PUZZLE_WIDTH-1 :(state[k]-1 )%PUZZLE_WIDTH;
 			colstate= k%PUZZLE_WIDTH;
 			h2+=( Math.abs(rowgoal - rowstate) + Math.abs(colgoal - colstate) );
 		}
 		return h2;
 	}
 	
-	
+	/**
+	expands the state.. checks the blanks abiltiy to move up down left right, with each function, returning the new child state 
+	**/
 	public ArrayList expand()
 	{
 		ArrayList expandList = new ArrayList();
@@ -160,7 +183,7 @@ class State implements Cloneable
 		if(emptyPosition < PUZZLE_WIDTH)
 			if (Puzzle.getPuzzleType() == Puzzle.NORMAL_PUZZLE)
 				return null;
-			else// if(Puzzle.getPuzzleType() == Puzzle.MODIFIED_PUZZLE)
+			else// if(Puzzle.getPuzzleType() == Puzzle.MODIFIED_PUZZLE) 
 				_state = Utility.swap(emptyPosition, (emptyPosition + PUZZLE_WIDTH * (PUZZLE_WIDTH -1) ) , state.clone());
 		else
 			_state = Utility.swap(emptyPosition,emptyPosition-PUZZLE_WIDTH , state.clone());
@@ -218,6 +241,10 @@ class State implements Cloneable
 		return newState;
 	}
 		
+		
+	/**
+	prints the tiles of the state, used to print them at the directions to win
+	**/
 	public String toString(){
 		String s= "";
 		if (move!=' ')
@@ -229,69 +256,5 @@ class State implements Cloneable
 		return s;
 	}
 	
-	
-	
-	
-	
-/*	
-	public State canMoveUpTorus()
-	{
-		int emptyPosition = Utility.whereIn(state,0);
-		// If it's in the first line which mean its position is 0,1, or 2
-		if(emptyPosition < PUZZLE_WIDTH){
-			//return null;
-			int[] _state2 = Utility.swap(emptyPosition, (emptyPosition + PUZZLE_WIDTH * (PUZZLE_WIDTH -1) ) , state.clone());
-			State newState2 = new State(_state2,this);
-			return newState2;
-		}
-		int[] _state = Utility.swap(emptyPosition,emptyPosition-PUZZLE_WIDTH , state.clone());
-		State newState = new State(_state,this);
-		return newState;
-	}
-	
-	public State canMoveDownTorus()
-	{
-		int emptyPosition = Utility.whereIn(state,0);
-		// If it's in the last line which mean its position is 0,1, or 2
-		if(emptyPosition/PUZZLE_WIDTH == PUZZLE_WIDTH-1){
-			//return null;
-			int[] _state2 = Utility.swap(emptyPosition, (emptyPosition- (PUZZLE_WIDTH * PUZZLE_WIDTH -1) ) , state.clone());
-			State newState2 = new State(_state2,this);
-			return newState2;
-		}
-		int[] _state = Utility.swap(emptyPosition,emptyPosition+PUZZLE_WIDTH , state.clone());
-		State newState = new State(_state,this);
-		return newState;
-	}
-	public State canMoveLeftTorus()
-	{
-		int emptyPosition = Utility.whereIn(state,0);
-		// If it's in the last line which mean its position is 0,1, or 2
-		if(emptyPosition % PUZZLE_WIDTH == 0){
-			//return null;
-			int[] _state2 = Utility.swap(emptyPosition,(emptyPosition + (PUZZLE_WIDTH -1) ), state.clone());
-			State newState2 = new State(_state2,this);
-			return newState2;
-		}
-		int[] _state = Utility.swap(emptyPosition,emptyPosition-1 , state.clone());
-		State newState = new State(_state,this);
-		return newState;
-	}
-	
-	public State canMoveRightTorus()
-	{
-		int emptyPosition = Utility.whereIn(state,0);
-		// If it's in the first line which mean its position is 0,1, or 2
-		if( emptyPosition % PUZZLE_WIDTH == PUZZLE_WIDTH -1 ){
-			//return null;
-			int[] _state2 = Utility.swap(emptyPosition,(emptyPosition - (PUZZLE_WIDTH -1) ), state.clone());
-			State newState2 = new State(_state2,this);
-			return newState2;
-		}
-		int[] _state = Utility.swap(emptyPosition,emptyPosition+1 , state.clone());
-		State newState = new State(_state,this);
-		return newState;
-	}
-*/	
 
 }   
